@@ -1,0 +1,159 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.css">
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+<link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}" media="print" onload="this.media='all'"/>
+<link rel="stylesheet" href="{{ 'component-article-card.css' | asset_url }}" media="print" onload="this.media='all'"/>
+<link rel="stylesheet" href="{{ 'section-featured-blog.css' | asset_url }}" media="print" onload="this.media='all'"/>
+
+{{ 'section-featured-blog.css' | asset_url | stylesheet_tag }}
+
+
+{% assign cell_align = section.settings.cell_align %}
+{% assign wrap_around = section.settings.wrap_around %}
+{% assign img_width = section.settings.img_width | append: 'x' %}
+
+
+<div class="slick-slider-section-{{ section.id }}" style="background-color: {{ section.settings.bg }}">
+<div class="page-width">
+    <div class="title">
+      <p class="text-title text-center" style="margin-bottom:{{ section.settings.title_mb }}px">{{ section.settings.title }}</p>
+    </div>
+    <div class="slick-carousel carousel-{{section.id }} text-center" style="width:100%;">
+      {%- for article in section.settings.blog.articles limit:section.settings.post_limit-%}  
+        <div class="slick-slide">
+          <div class="blog__post">
+            {% render 'article-card', blog: section.settings.blog, article: article, show_image: section.settings.show_image, show_date: section.settings.show_date, show_author: section.settings.show_author, show_excerpt:section.settings.show_excerpt %}
+        </div>
+       </div>
+      {%- endfor -%}
+    </div>
+
+</div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $('.slick-carousel').slick({
+      dots: true,
+      arrows: false,
+      autoplay: true,
+      autoplaySpeed: 2000,
+      slidesToShow: {{section.settings.columns_desktop}},
+      slidesToScroll: 1,
+      centerMode: false,
+      variableWidth: false,
+      prevArrow: '<button type="button" class="slick-prev"><i class="fa fa-chevron-left"></i></button>',
+      nextArrow: '<button type="button" class="slick-next"><i class="fa fa-chevron-right"></i></button>'
+    });
+  });
+</script>
+
+
+{% schema %}
+{
+"name": "Blog Slider",
+"settings": [
+  {
+      "type": "text",
+      "id": "title",
+      "default": "Blog posts",
+      "label": "t:sections.featured-blog.settings.heading.label"
+    },
+{
+      "type": "blog",
+      "id": "blog",
+      "label": "t:sections.featured-blog.settings.blog.label"
+    },
+    {
+      "type": "range",
+      "id": "post_limit",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 3,
+      "label": "t:sections.featured-blog.settings.post_limit.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "label": "t:sections.featured-blog.settings.columns_desktop.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "default": true,
+      "label": "t:sections.featured-blog.settings.show_image.label",
+      "info": "t:sections.featured-blog.settings.show_image.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "t:sections.featured-blog.settings.show_date.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "default": false,
+      "label": "t:sections.featured-blog.settings.show_author.label"
+    },
+  {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "default": false,
+      "label": "t:sections.featured-blog.settings.show_excerpt.label"
+    },
+{
+"type": "range",
+"id": "title_mb",
+"min": 30,
+"max": 120,
+"step": 1,
+"unit": "px",
+"label": "Title Margin Bottom",
+"default": 48
+}
+],
+"presets": [
+{
+"name": "Blog Slider",
+"category": "Slider"
+}
+]
+}
+{% endschema %}
